@@ -63,6 +63,13 @@ if len(argv) > 1:
         print 'Spyeye Tracker not Available'
     else:
         txtlists = txtlists + spyeye.read()
+    
+    try:
+        malcode = urlopen('http://malc0de.com/bl/IP_Blacklist.txt')  
+    except HTTPError:
+        print 'Malc0de not Available'
+    else:
+        txtlists = txtlists + malcode.read()
 
     # Concat IPs into one variable 'lists'
     #txtlists = zeus.read() + emerging.read() + malware.read() + spyeye.read()
