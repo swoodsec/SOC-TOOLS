@@ -10,7 +10,8 @@
 # NOTES: This has been tested on OSX with Python 2.7.5 and Kali Linux with Python 2.7.3. Make sure the text file input contains only one IP per line.
 
 # Imports
-import urllib2, sets
+from urllib2 import urlopen, HTTPError
+import sets
 from sys import argv
 
 # Title and Usage 
@@ -26,19 +27,45 @@ if len(argv) > 1:
 
     # Split user input into list
     userlist = usertxt.split()
+    
+    # Initiating txtlists variable to hold online blacklists.
+    txtlists = "Filler"
 
     # Download fresh IP blacklists
     # Zeus tracker source
-    zeus = urllib2.urlopen('http://www.abuse.ch/zeustracker/blocklist.php?download=ipblocklist')
+    try:
+        zeus = urlopen('http://www.abuse.ch/zeustracker/blocklist.php?download=ipblocklist')
+    except HTTPError:
+        print 'Zeus Tracker not Available'
+    else:
+        txtlists = txtlists + zeus.read()    
+        
     # Emerging threats source
-    emerging = urllib2.urlopen('http://rules.emergingthreats.net/blockrules/compromised-ips.txt')
+    try:
+        emerging = urlopen('http://rules.emergingthreats.net/blockrules/compromised-ips.txt')
+    except HTTPError:
+        print 'Emerging Threats not Available'
+    else:
+        txtlists = txtlists + emerging.read()
+        
     # Malware Domain List
-    malware = urllib2.urlopen('http://www.malwaredomainlist.com/hostslist/ip.txt')
+    try:
+        malware = urlopen('http://www.malwaredomainlist.com/hostslist/ip.txt')
+    except HTTPError:
+        print 'Malware Domain List not Available'
+    else:
+        txtlists = txtlists + malware.read()
+        
     # Spyeye tracker source
-    spyeye = urllib2.urlopen('https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist')
+    try:
+        spyeye = urlopen('https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist')
+    except HTTPError:
+        print 'Spyeye Tracker not Available'
+    else:
+        txtlists = txtlists + spyeye.read()
 
     # Concat IPs into one variable 'lists'
-    txtlists = zeus.read() + emerging.read() + malware.read() + spyeye.read()
+    #txtlists = zeus.read() + emerging.read() + malware.read() + spyeye.read()
     # Split the sources into an actual list
     srclists = txtlists.split()
 
