@@ -1,4 +1,4 @@
-#!/bin/python
+#!/usr/bin/python
 
 #Name:          IP Bulk Lookup Tool   
 #Description: This script accepts a text file full of IP's (1 per line) and cross references them against a number of live open source lists
