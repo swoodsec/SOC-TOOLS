@@ -7,6 +7,8 @@
 #License:        Free as in Free Beer. Please use, abuse and improve :)
 #Author:        Andrew Swartwood
 
+# NOTES: This has been tested on OSX with Python 2.7.5 and Kali Linux with Python 2.7.3. Make sure the text file input contains only one IP per line.
+
 # Imports
 import urllib2, sets
 from sys import argv
@@ -15,38 +17,43 @@ from sys import argv
 print '~~~~ SwoodSec Bulk IP Blacklisterator ~~~~'
 print 'Usage: ipbulklookup.py youriplist.txt'
 
-# Open user provided IP list
-script, filename = argv
-textfile = open(filename)
-usertxt = textfile.read()
 
-# Split user input into list
-userlist = usertxt.split()
+if len(argv) > 1:
+    # Open user provided IP list
+    script, filename = argv
+    textfile = open(filename)
+    usertxt = textfile.read()
 
-# Download fresh IP blacklists
-# Zeus tracker source
-zeus = urllib2.urlopen('http://www.abuse.ch/zeustracker/blocklist.php?download=ipblocklist')
-# Emerging threats source
-emerging = urllib2.urlopen('http://rules.emergingthreats.net/blockrules/compromised-ips.txt')
-# Malware Domain List
-malware = urllib2.urlopen('http://www.malwaredomainlist.com/hostslist/ip.txt')
-# Spyeye tracker source
-spyeye = urllib2.urlopen('https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist')
+    # Split user input into list
+    userlist = usertxt.split()
 
-# Concat IPs into one variable 'lists'
-txtlists = zeus.read() + emerging.read() + malware.read() + spyeye.read()
-# Split the sources into an actual list
-srclists = txtlists.split()
+    # Download fresh IP blacklists
+    # Zeus tracker source
+    zeus = urllib2.urlopen('http://www.abuse.ch/zeustracker/blocklist.php?download=ipblocklist')
+    # Emerging threats source
+    emerging = urllib2.urlopen('http://rules.emergingthreats.net/blockrules/compromised-ips.txt')
+    # Malware Domain List
+    malware = urllib2.urlopen('http://www.malwaredomainlist.com/hostslist/ip.txt')
+    # Spyeye tracker source
+    spyeye = urllib2.urlopen('https://spyeyetracker.abuse.ch/blocklist.php?download=ipblocklist')
 
-# Header for matches:
-print "IP's in Blacklists (blank if n/a):"
+    # Concat IPs into one variable 'lists'
+    txtlists = zeus.read() + emerging.read() + malware.read() + spyeye.read()
+    # Split the sources into an actual list
+    srclists = txtlists.split()
 
-# Find matches between user provided list and blacklists, 
-matches = set(userlist) & set(srclists)
+    # Header for matches:
+    print "IP's in Blacklists (blank if n/a):"
 
-# Print matches
-for x in matches:
-    print x
+    # Find matches between user provided list and blacklists, 
+    matches = set(userlist) & set(srclists)
+
+    # Print matches
+    for x in matches:
+        print x
+else:
+    print 'Requires argument. Please re-run with text file.'
+    
 
 
 
